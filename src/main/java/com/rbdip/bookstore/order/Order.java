@@ -16,7 +16,12 @@ import java.time.Instant;
  */
 @Entity
 @Table(name = "orders")
+// JPA-сущность по определению является носителем состояния, отдаваемым
+// геттерами; добавлять к ней бизнес-поведение ради PMD DataClass не нужно.
+@SuppressWarnings("PMD.DataClass")
 public class Order {
+
+    public static final String STATUS_NEW = "new";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +39,10 @@ public class Order {
     @Column(nullable = false)
     private String status;
 
+    // final у персистентного поля запрещён JPA: Hibernate записывает его
+    // при загрузке из БД.
     @Column(name = "created_at", nullable = false)
+    @SuppressWarnings("PMD.ImmutableField")
     private Instant createdAt = Instant.now();
 
     protected Order() {

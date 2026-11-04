@@ -15,6 +15,9 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "order_items")
+// JPA-сущность по определению является носителем состояния, отдаваемым
+// геттерами; добавлять к ней бизнес-поведение ради PMD DataClass не нужно.
+@SuppressWarnings("PMD.DataClass")
 public class OrderItem {
 
     @Id

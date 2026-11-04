@@ -3,8 +3,11 @@ package com.rbdip.bookstore;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
-public class BookstoreApplication {
+@SpringBootApplication(proxyBeanMethods = false)
+public final class BookstoreApplication {
+
+    private BookstoreApplication() {
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(BookstoreApplication.class, args);
