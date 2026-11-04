@@ -9,6 +9,6 @@ public record OrderLine(Product product, int quantity) {
     }
 
     public OrderItem toOrderItem(Long orderId) {
-        return new OrderItem(orderId, product.getName(), product.getPrice(), quantity);
+        return new OrderItem(orderId, product, quantity);
     }
 }
