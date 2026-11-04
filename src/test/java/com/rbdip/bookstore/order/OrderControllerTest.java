@@ -44,8 +44,8 @@ class OrderControllerTest {
         Order order = orderWithId(3L, "Anna Sidorova");
         Product product = new Product("Refactoring", new BigDecimal("40.00"), null);
         OrderItem item = new OrderItem(3L, product, 2);
-        when(orderRepository.findAll()).thenReturn(List.of(order));
-        when(orderItemRepository.findByOrderId(3L)).thenReturn(List.of(item));
+        when(orderRepository.findAllWithCustomer()).thenReturn(List.of(order));
+        when(orderItemRepository.findAllByOrderIdIn(List.of(3L))).thenReturn(List.of(item));
 
         List<Map<String, Object>> response = controller.listOrders();
 
@@ -57,5 +57,13 @@ class OrderControllerTest {
         Map<?, ?> itemMap = (Map<?, ?>) items.get(0);
         assertThat(itemMap.get("productName")).isEqualTo("Refactoring");
         assertThat(itemMap.get("quantity")).isEqualTo(2);
+    }
+
+    @Test
+    void listOrdersWithoutOrdersSkipsItemLookup() {
+        when(orderRepository.findAllWithCustomer()).thenReturn(List.of());
+
+        assertThat(controller.listOrders()).isEmpty();
+        org.mockito.Mockito.verifyNoInteractions(orderItemRepository);
     }
 }

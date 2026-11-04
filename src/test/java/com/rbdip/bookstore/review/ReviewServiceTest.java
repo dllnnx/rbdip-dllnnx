@@ -6,23 +6,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.rbdip.bookstore.order.OrderItemRepository;
-import com.rbdip.bookstore.order.OrderRepository;
+import com.rbdip.bookstore.purchase.PurchaseVerifier;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ReviewServiceTest {
 
     private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
-    private final OrderRepository orderRepository = mock(OrderRepository.class);
-    private final OrderItemRepository orderItemRepository = mock(OrderItemRepository.class);
-    private final ReviewService service = new ReviewService(
-            reviewRepository, orderRepository, orderItemRepository);
+    private final PurchaseVerifier purchaseVerifier = mock(PurchaseVerifier.class);
+    private final ReviewService service = new ReviewService(reviewRepository, purchaseVerifier);
 
     @Test
     void addReviewSavesReviewWithGivenAuthor() {
-        when(orderRepository.findAll()).thenReturn(List.of());
-        when(orderItemRepository.findAll()).thenReturn(List.of());
         when(reviewRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Review review = service.addReview(5L, "Olga", 5, "Great book");
@@ -31,12 +26,11 @@ class ReviewServiceTest {
         assertThat(review.getAuthorName()).isEqualTo("Olga");
         assertThat(review.getRating()).isEqualTo(5);
         assertThat(review.getComment()).isEqualTo("Great book");
+        verify(purchaseVerifier).anyPurchasesExist();
     }
 
     @Test
     void addReviewFallsBackToAnonymousAuthor() {
-        when(orderRepository.findAll()).thenReturn(List.of());
-        when(orderItemRepository.findAll()).thenReturn(List.of());
         when(reviewRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         assertThat(service.addReview(5L, null, 4, null).getAuthorName()).isEqualTo("anonymous");
