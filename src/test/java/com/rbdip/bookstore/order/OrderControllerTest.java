@@ -21,7 +21,9 @@ class OrderControllerTest {
             orderService, orderRepository, orderItemRepository);
 
     private Order orderWithId(long id, String fullName) {
-        Order order = new Order(new Customer(fullName, null, null), Order.STATUS_NEW);
+        String[] nameParts = fullName.split(" ", 2);
+        String lastName = nameParts.length > 1 ? nameParts[1] : "";
+        Order order = new Order(new Customer(nameParts[0], lastName, null, null), Order.STATUS_NEW);
         ReflectionTestUtils.setField(order, "id", id);
         return order;
     }

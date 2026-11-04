@@ -36,7 +36,7 @@ class OrderServiceTest {
     }
 
     private Order savedOrder() {
-        Order order = new Order(new Customer("Ivan Petrov", "Moscow", null), Order.STATUS_NEW);
+        Order order = new Order(new Customer("Ivan", "Petrov", "Moscow", null), Order.STATUS_NEW);
         org.springframework.test.util.ReflectionTestUtils.setField(order, "id", 7L);
         return order;
     }

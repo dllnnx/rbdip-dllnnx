@@ -29,8 +29,8 @@ class OrderFactoryTest {
 
     @Test
     void createOrderReusesExistingCustomerByName() {
-        Customer existing = new Customer("Ivan Petrov", "Old Address", "+79990000001");
-        when(customerRepository.findByFullName("Ivan Petrov")).thenReturn(Optional.of(existing));
+        Customer existing = new Customer("Ivan", "Petrov", "Old Address", "+79990000001");
+        when(customerRepository.findByFirstNameAndLastName("Ivan", "Petrov")).thenReturn(Optional.of(existing));
 
         Order order = factory.createOrder(new CreateOrderRequest(
                 "Ivan Petrov", "New Address", "+79990000002", "regular", null, List.of()));
@@ -42,13 +42,14 @@ class OrderFactoryTest {
 
     @Test
     void createOrderCreatesCustomerWhenNameIsUnknown() {
-        when(customerRepository.findByFullName("Anna Sidorova")).thenReturn(Optional.empty());
+        when(customerRepository.findByFirstNameAndLastName("Anna", "Sidorova")).thenReturn(Optional.empty());
         when(customerRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Order order = factory.createOrder(new CreateOrderRequest(
                 "Anna Sidorova", "SPb, Nevsky 10", null, "regular", null, List.of()));
 
-        assertThat(order.getCustomer().getFullName()).isEqualTo("Anna Sidorova");
+        assertThat(order.getCustomer().getFirstName()).isEqualTo("Anna");
+        assertThat(order.getCustomer().getLastName()).isEqualTo("Sidorova");
         assertThat(order.getCustomer().getAddress()).isEqualTo("SPb, Nevsky 10");
         assertThat(order.getCustomer().getPhone()).isNull();
     }

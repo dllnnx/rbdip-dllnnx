@@ -1,0 +1,4 @@
+ALTER TABLE customers ADD COLUMN first_name VARCHAR(255);
+ALTER TABLE customers ADD COLUMN last_name VARCHAR(255);
+
+ALTER TABLE customers ALTER COLUMN full_name DROP NOT NULL;

@@ -18,9 +18,11 @@ public class OrderFactory {
     }
 
     public Order createOrder(CreateOrderRequest request) {
-        Customer customer = customerRepository.findByFullName(request.customerFullName())
+        String firstName = Customer.firstNameOf(request.customerFullName());
+        String lastName = Customer.lastNameOf(request.customerFullName());
+        Customer customer = customerRepository.findByFirstNameAndLastName(firstName, lastName)
                 .orElseGet(() -> customerRepository.save(new Customer(
-                        request.customerFullName(), request.customerAddress(), request.customerPhone())));
+                        firstName, lastName, request.customerAddress(), request.customerPhone())));
         return new Order(customer, Order.STATUS_NEW);
     }
 
